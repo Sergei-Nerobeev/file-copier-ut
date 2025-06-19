@@ -29,16 +29,18 @@ public class FileCopier implements Callable<Integer> {
       Files.copy(Path.of(sourcePath), Paths.get(copyPath, "copy.txt"), StandardCopyOption.REPLACE_EXISTING);
     }
     catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalArgumentException("File not found!");
     }
   }
 
-  public boolean isExists() {
-    return Files.exists(Paths.get(sourcePath)) && Files.isRegularFile(Paths.get(sourcePath));
+  public void isExists() {
+    if (Files.exists(Paths.get(sourcePath))) {
+      Files.isRegularFile(Paths.get(sourcePath));
+    }
   }
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() {
     getCopy();
     return 0;
   }

@@ -20,11 +20,12 @@ public class FileCopier implements Callable<Integer> {
   @CommandLine.Parameters(index = "0", description = "The source file to copy.")
   String sourcePath = "/home/coder/checking/original";
 
-  @CommandLine.Parameters(index = "1", description = "Copy File name")
+  @CommandLine.Parameters(index = "1", description = "Destination of Copy File name")
   String copyPath = "/home/coder/checking/copy";
 
+
   public void getCopy() {
-    isExists();
+    isExist();
     try {
       Files.copy(Path.of(sourcePath), Paths.get(copyPath, "copy.txt"), StandardCopyOption.REPLACE_EXISTING);
     }
@@ -33,10 +34,8 @@ public class FileCopier implements Callable<Integer> {
     }
   }
 
-  public void isExists() {
-    if (Files.exists(Paths.get(sourcePath))) {
-      Files.isRegularFile(Paths.get(sourcePath));
-    }
+  public boolean isExist() {
+    return Files.exists(Paths.get(sourcePath)) && Files.isRegularFile(Paths.get(sourcePath));
   }
 
   @Override

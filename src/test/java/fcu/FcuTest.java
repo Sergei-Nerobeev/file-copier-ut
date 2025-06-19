@@ -1,4 +1,4 @@
-package hu.nerbe.fcu;
+package fcu;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,14 +10,13 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FcuTest {
+class FcuTest {
 
   @TempDir
   Path tempDir;
-
+  FileToCopy fileToCopy;
   Path sourceFile;
   Path destinationFile;
-  FileCopier fileCopier = new FileCopier();
 
   @BeforeEach
   void setUp() throws IOException {
@@ -27,14 +26,14 @@ public class FcuTest {
     Files.createDirectories(copyDirectory);
     destinationFile = copyDirectory.resolve("copy.txt");
 
-    fileCopier = new FileCopier();
-    fileCopier.sourcePath = sourceFile.toString();
-    fileCopier.copyPath = copyDirectory.toString();
+    fileToCopy = new FileToCopy();
+    fileToCopy.sourcePath = sourceFile.toString();
+    fileToCopy.copyPath = copyDirectory.toString();
   }
 
   @Test
-  public void isExists_SourceFileExists_test() {
+  void isExists_SourceFileExists_test() {
 
-    assertTrue(fileCopier.isExist(), "Исходный файл должен существовать и быть обычным файлом.");
+    assertTrue(fileToCopy.isExist(), "Исходный файл должен существовать и быть обычным файлом.");
   }
 }

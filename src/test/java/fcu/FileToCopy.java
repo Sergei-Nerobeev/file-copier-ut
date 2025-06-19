@@ -1,4 +1,4 @@
-package hu.nerbe.fcu;
+package fcu;
 
 import picocli.CommandLine;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
     version = "fcu 1.0",
     description = "Copies a source file to a destination directory.")
 
-public class FileCopier implements Callable<Integer> {
+public class FileToCopy implements Callable<Integer> {
 
   @CommandLine.Parameters(index = "0", description = "The source file to copy.")
   String sourcePath = "/home/coder/checking/original";
@@ -40,12 +40,12 @@ public class FileCopier implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    getCopy();
+//    getCopy();
     return 0;
   }
 
   public static void main(String... args) {
-    int exitCode = new CommandLine(new FileCopier()).execute(args);
+    int exitCode = new CommandLine(new FileToCopy()).execute(args);
     System.exit(exitCode);
   }
 }

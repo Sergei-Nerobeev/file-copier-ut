@@ -9,7 +9,7 @@ group = "hu.nerbe"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass.set("hu.nerbe.fcu.FileCopier")
+    mainClass.set("hu.nerbe.fcutest.FileCopier")
 }
 
 repositories {

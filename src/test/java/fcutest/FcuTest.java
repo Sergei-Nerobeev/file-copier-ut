@@ -1,5 +1,6 @@
-package fcu;
+package fcutest;
 
+import fcu.FileToCopy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -8,8 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FcuTest {
 
@@ -39,15 +39,30 @@ class FcuTest {
   }
 
   @Test
+  void isNotExists_SourceFileExists_test() {
+
+    fileToCopy.sourcePath = tempDir.resolve("non_existent_source.txt").toString();
+
+    IllegalArgumentException thrown =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> fileToCopy.getCopy(),
+            "Должно быть выброшено IllegalArgumentException, так как исходный файл не существует."
+        );
+
+    assertEquals("File not found!", thrown.getMessage(), "Сообщение исключения должно совпадать.");
+  }
+
+  @Test
   void getCopy_CopiesFileSuccessfully() throws IOException {
 
     fileToCopy.getCopy();
 
-    assertTrue(Files.exists(destinationFile),"Файл назначения должен быть создан.");
-    assertTrue(Files.isRegularFile(destinationFile),"Файл назначения должен быть обычным файлом.");
+    assertTrue(Files.exists(destinationFile), "Файл назначения должен быть создан.");
+    assertTrue(Files.isRegularFile(destinationFile), "Файл назначения должен быть обычным файлом.");
 
     String copiedContent = Files.readString(destinationFile);
-    assertEquals("Original content", copiedContent,"Содержимое скопированного файла должно совпадать с оригиналом.");
+    assertEquals("Original content", copiedContent, "Содержимое скопированного файла должно совпадать с оригиналом.");
   }
 
   @Test

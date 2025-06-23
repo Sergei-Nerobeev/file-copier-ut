@@ -18,10 +18,10 @@ import java.util.concurrent.Callable;
 public class FileToCopy implements Callable<Integer> {
 
   @CommandLine.Parameters(index = "0", description = "The source file to copy.")
-  String sourcePath = "/home/coder/checking/original";
+  public String sourcePath;
 
   @CommandLine.Parameters(index = "1", description = "Destination of Copy File name")
-  String copyPath = "/home/coder/checking/copy";
+  public String copyPath;
 
 
   public void getCopy() {

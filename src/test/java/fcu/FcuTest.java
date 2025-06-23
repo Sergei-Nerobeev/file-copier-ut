@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FcuTest {
@@ -35,5 +36,27 @@ class FcuTest {
   void isExists_SourceFileExists_test() {
 
     assertTrue(fileToCopy.isExist(), "Исходный файл должен существовать и быть обычным файлом.");
+  }
+
+  @Test
+  void getCopy_CopiesFileSuccessfully() throws IOException {
+
+    fileToCopy.getCopy();
+
+    assertTrue(Files.exists(destinationFile),"Файл назначения должен быть создан.");
+    assertTrue(Files.isRegularFile(destinationFile),"Файл назначения должен быть обычным файлом.");
+
+    String copiedContent = Files.readString(destinationFile);
+    assertEquals("Original content", copiedContent,"Содержимое скопированного файла должно совпадать с оригиналом.");
+  }
+
+  @Test
+  void testGetCopy_OverwritesExistingFile() throws Exception {
+    Files.writeString(destinationFile, "Old content.");
+
+    fileToCopy.getCopy();
+
+    String copiedContent = Files.readString(destinationFile);
+    assertEquals("Original content", copiedContent, "Существующий файл должен быть перезаписан.");
   }
 }

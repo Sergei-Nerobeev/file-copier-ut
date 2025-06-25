@@ -23,11 +23,11 @@ public class FileToCopy implements Callable<Integer> {
   @CommandLine.Parameters(index = "1", description = "Destination of Copy File name")
   public String copyPath;
 
-  public void getCopy () throws IOException{
+  public void getCopy(String copyFileName) throws IOException{
     if (!isExist()) {
       throw new IllegalArgumentException("File not found!");
     }
-      Files.copy(Path.of(sourcePath), Paths.get(copyPath, "copy.txt"), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(Path.of(sourcePath), Paths.get(copyPath, copyFileName), StandardCopyOption.REPLACE_EXISTING);
   }
 
   public boolean isExist() {

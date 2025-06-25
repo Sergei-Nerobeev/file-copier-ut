@@ -8,6 +8,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,9 +16,11 @@ class FcuTest {
 
   @TempDir
   Path tempDir;
+
   FileToCopy fileToCopy;
   Path sourceFile;
   Path destinationFile;
+  Path destinationDirectory;
 
   @BeforeEach
   void setUp() throws IOException {
@@ -26,10 +29,10 @@ class FcuTest {
     Path copyDirectory = tempDir.resolve("copy");
     Files.createDirectories(copyDirectory);
     destinationFile = copyDirectory.resolve("copy.txt");
-
     fileToCopy = new FileToCopy();
     fileToCopy.sourcePath = sourceFile.toString();
     fileToCopy.copyPath = copyDirectory.toString();
+    destinationDirectory = tempDir.resolve("copy");
   }
 
   @Test
@@ -46,7 +49,7 @@ class FcuTest {
     IllegalArgumentException thrown =
         assertThrows(
             IllegalArgumentException.class,
-            () -> fileToCopy.getCopy(),
+            () -> fileToCopy.getCopy("copy.txt"),
             "Должно быть выброшено IllegalArgumentException, так как исходный файл не существует."
         );
 
@@ -54,9 +57,9 @@ class FcuTest {
   }
 
   @Test
-  void getCopy_CopiesFileSuccessfully() throws IOException {
+  void getCopy_CopiesFileSuccessfully_test() throws IOException {
 
-    fileToCopy.getCopy();
+    fileToCopy.getCopy("copy.txt");
 
     assertTrue(Files.exists(destinationFile), "Файл назначения должен быть создан.");
     assertTrue(Files.isRegularFile(destinationFile), "Файл назначения должен быть обычным файлом.");
@@ -66,12 +69,29 @@ class FcuTest {
   }
 
   @Test
-  void testGetCopy_OverwritesExistingFile() throws Exception {
+  void getCopy_OverwritesExistingFile_test() throws Exception {
     Files.writeString(destinationFile, "Old content.");
 
-    fileToCopy.getCopy();
+    fileToCopy.getCopy("copy.txt");
 
     String copiedContent = Files.readString(destinationFile);
     assertEquals("Original content", copiedContent, "Существующий файл должен быть перезаписан.");
+  }
+
+  @Test
+  void verifyNumberOfCopiedFiles_isTen_test() throws IOException {
+
+    int numberOfCopies = 10;
+
+    for (int i = 0; i < numberOfCopies; i++) {
+      String uniqueName = "Number " + i + " .txt";
+      fileToCopy.getCopy(uniqueName);
+    }
+    List<Path> copiedFiles = Files.list(destinationDirectory)
+                                  .filter(Files::isRegularFile)
+                                  .toList();
+
+    assertEquals(numberOfCopies, copiedFiles.size());
+
   }
 }
